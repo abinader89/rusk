@@ -1,0 +1,69 @@
+DESCRIPTION:
+
+This game is a 2 player game. The scene will be a grid of hexagons.
+Each hexagon will start with a number of dice (D6), and will either be assigned
+to player 1, player 2, or 'neutral'. The goal of the game is to conquer the
+other player's territories. The players will take turns. Each turn consists of
+2 stages: the reinforcement stage and the attack stage.
+
+In the reinforcement stage, the player is given n dice where n is the number of
+territories that they control. They may distribute these dice as they see fit.
+Each hexagon has a maximum of 20 dice.
+
+In the attack stage, the player may attack any hexagons adjacent to hexagons
+that they control. This attack moves all but one of the dice to the new hexagon.
+A roll-off occurs. If the sum of the the values of the attacker's dice is
+greater than the sum of the defender's dice, they occupy the square. Otherwise,
+they lose all of the dice used in the attack. The player may continue attacking
+until they choose to end their turn or are no longer able to attack.
+
+The game is over when one player no longer controls any hexagons. The last
+player standing wins.
+
+
+Architecture:
+
+GameModel:
+    - Hex[] board
+    - int currentTurn
+    - BOOL isInReinforcementStage
+
+Hex:
+    - Player owner
+    - int numberOfDice (max = 20)
+
+Player = enum (ONE, TWO, NEUTRAL)
+
+GameController:
+    - void startGame(configuration)
+        sets up game model and view
+    - BOOL makeMove(Hex fromHex, Hex toHex)
+    - void showMenu()
+        sets up menu view
+    - void showGameOver()
+        sets up game over view
+    - void interactHex(Hex h)
+        if isInReinforcementStage:
+            add die to h if you own it, else do nothing
+        if !isInReinforcementStage:
+            if no hex selected, set to selected
+            if hex selected and this one is adjacent, makeMove.
+            if hex selected and this one is NOT adjacent, deselect old one + select new one
+    - Hex currentlySelectedHex
+        used to determine where the player wants to move
+
+MenuView:
+    - clickStartGameSceneOne()
+    - clickStartGameSceneTwo()
+    - clickStartGameSceneThree()
+    - clickShowInstructions()
+
+InstructionsView:
+    - clickReturnToMenu()
+
+GameView:
+    - clickHex()
+    - clickEndTurn()
+
+GameOverView:
+    - clickReturnToMenu()

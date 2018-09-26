@@ -1,0 +1,20 @@
+CHECKPOINT 1:
+
+- Created a game model that encompasses the state of the game
+- Ability to instantiate game model based on input of owned hexes/number of dice
+- Ability to show grid based on game model
+- Ability to let users end their turns without doing anything (optional)
+
+CHECKPOINT 2:
+
+- Players are able to distribute dice at the beginning of their turn
+- Players are able to attack at the end of their turn
+- 50% code coverage
+- Dice rolling animations when attacking, highlight available moves (optional)
+
+FINAL:
+
+- Game ends when one player no longer controls any hexes
+- Game properly identifies winner
+- 80%+ code coverage
+- Randomly generated maps instead of 3 defaults (optional)
