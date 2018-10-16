@@ -6,7 +6,9 @@ class Game
     GameModel gameModel;
     SDL_Window *window;
 
-    void loop();
+    void menuScreenLoop();
+    void playLoop();
+    SDL_Surface* loadSurface(std::string);
 
 public:
     Game();
