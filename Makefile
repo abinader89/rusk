@@ -28,5 +28,5 @@ Game.o: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
 	g++ $(CPPFLAGS) -o $(BINDIR)/$@ $<
 
 clean:
-	rm $(BINDIR)/*
-	rm Rusk
+	rm -f $(BINDIR)/*
+	rm -f Rusk
