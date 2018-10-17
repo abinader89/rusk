@@ -4,3 +4,6 @@
 # ignore the executable(s)
 Rusk
 main
+
+# ignore the .vagrant/
+.vagrant/*
