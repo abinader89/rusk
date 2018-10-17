@@ -1,0 +1,6 @@
+# ignore the binaries
+*.o
+
+# ignore the executable(s)
+Rusk
+main
