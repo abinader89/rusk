@@ -29,4 +29,4 @@ Game.o: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
 
 clean:
 	rm $(BINDIR)/*
-	rm Rusk
+	rm main
