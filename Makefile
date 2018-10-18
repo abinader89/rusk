@@ -7,9 +7,9 @@ SDLDIR=/Library/Frameworks/SDL2.framework/Headers
 CPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR)
 LINKERFLAGS=-lSDL2
 
-all: Rusk
+all: main
 
-Rusk: main.o Hex.o GameModel.o Game.o Player.o
+main: main.o Hex.o GameModel.o Game.o Player.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
 main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
