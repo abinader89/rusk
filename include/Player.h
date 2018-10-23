@@ -1,10 +1,7 @@
 #include <iostream>
 
-class Player
+struct Player
 {
-    private:
     bool currentTurn;
-
-    public:
-    bool isTurn() { return currentTurn; }
+    int draftCount;
 };
