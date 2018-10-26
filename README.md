@@ -17,8 +17,8 @@ are set to 3. Place your armies on any territories you currently own.
 ### Attack Phase: ###
 If you have at least 2 armies on a territory and that territory neighbors 
 a territory owned by another player, you may attack it. Attacks are the sum 
-of a number generated with the range \[armies, (armies-1)*6) vs the defenders 
-number generated with the range (armies, armies*6). If the attacker succeeds, 
+of a number generated with the range \[armies, (armies - 1) * 6) vs the defenders 
+number generated with the range (armies, armies * 6). If the attacker succeeds, 
 he or she must move at least 1 army and up to (armies on attacking territory - 1),
 at least 1 army must be left on the attacking territory. The current player may 
 attack as many times as he or she legally can or can end his or her turn prematurely.
