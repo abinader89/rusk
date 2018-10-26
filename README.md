@@ -22,7 +22,7 @@ amount of armies he or she has on the defending territory up to 3. The attacker
 drops the 2 lowest dice rolls and ties go to the defender. Once an attacker has
 defeated all armies on the defending territory he or she must advance up to the
 amount of armies on the attacking territory - 1 (at least 1 army must be left on
-the attacking territory. The current player may attack as many times as he or
+the attacking territory). The current player may attack as many times as he or
 she legally can or can end his or her turn prematurely.
 
 ### Reinforcement Phase: ###
