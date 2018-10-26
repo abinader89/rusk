@@ -15,15 +15,13 @@ Draft the amount of armies you draft are your territory values divided by
 are set to 3. Place your armies on any territories you currently own.
 
 ### Attack Phase: ###
-If you have at least 2 armies on a territory and that territory
-neighbors a territory owned by another player, you may attack it. Input the
-number of armies you want to attack with up to 5. The defender rolls with the
-amount of armies he or she has on the defending territory up to 3. The attacker
-drops the 2 lowest dice rolls and ties go to the defender. Once an attacker has
-defeated all armies on the defending territory he or she must advance up to the
-amount of armies on the attacking territory - 1 (at least 1 army must be left on
-the attacking territory). The current player may attack as many times as he or
-she legally can or can end his or her turn prematurely.
+If you have at least 2 armies on a territory and that territory neighbors 
+a territory owned by another player, you may attack it. Attacks are the sum 
+of a number generated with the range \[armies, (armies-1)*6) vs the defenders 
+number generated with the range (armies, armies*6). If the attacker succeeds, 
+he or she must move at least 1 army and up to (armies on attacking territory - 1),
+at least 1 army must be left on the attacking territory. The current player may 
+attack as many times as he or she legally can or can end his or her turn prematurely.
 
 ### Reinforcement Phase: ###
 After the attack phase, the current player has an option to
