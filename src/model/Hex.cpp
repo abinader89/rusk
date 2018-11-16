@@ -8,4 +8,5 @@ Hex::Hex(int newNumberOfDice)
 Hex::Hex()
 {
     numberOfDice = 20;
+    isSelected = false;
 }
