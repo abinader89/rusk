@@ -9,6 +9,9 @@ struct GameModel
     int currentTurn;
     bool isInReinforcementStage;
     int currentScreen;
+    int boardWidth;
+    int boardHeight;
 
     GameModel();
+    void handleSelectionChange(int direction);
 };
