@@ -1,0 +1,5 @@
+press 1 on the main menu.
+
+In the game screen, use the arrow keys to change which hex is selected.
+Once implemented, this will be how players distribute reinforcements and
+ attack other players' territories.

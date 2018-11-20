@@ -1,0 +1,2 @@
+All of the assets we are currently using were created by people in our group.
+For help setting up SDL2 and showing images, we used 'Lazy Foo Productions' tutorials.

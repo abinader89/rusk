@@ -1,0 +1,42 @@
+CHECKPOINT 1:
+
+- Created a game model that encompasses the state of the game
+STATUS: game model exists, doesn't encompass ENTIRE state yet
+- Ability to instantiate game model based on input of owned hexes/number of dice
+STATUS: ability exists, but currently only instantiate with defaults
+- Ability to show grid based on game model
+STATUS: we show a fake game screen for the moment
+- Ability to let users end their turns without doing anything (optional)
+STATUS: unstarted
+
+SDL2 took a lot longer to set up than anticipated, so it turns out we were a bit ambitious with where we wanted to be. The
+foundational game model is coming along very nicely though. We've added missed goals to checkpoint 2.
+
+CHECKPOINT 2:
+
+- Players are able to distribute dice at the beginning of their turn
+STATUS: our gameModel supports this, but we haven't fully implemented controls for it.
+- Players are able to attack at the end of their turn
+STATUS: no turns yet
+- Ability to show grid based on game model
+STATUS: complete
+- 50% code coverage
+STATUS: we have 1 method covered.
+- Ability to let users end their turns without doing anything (optional)
+STATUS: unstarted
+- Dice rolling animations when attacking, highlight available moves (optional)
+STATUS: unstarted
+
+getting CXXTEST setup was a bit of a nightmare (despite the unit testing homework going smoothly), so we didn't get to as much as we'd hoped.
+
+FINAL:
+
+- implement multiplayer with full functionality of turns (already exists in gameModel, just no controls)
+- Game ends when one player no longer controls any hexes
+- Ability to let users end their turns without doing anything
+- Ability to let users attack
+- Flesh out combat math
+- Create last 2 maps
+- Game properly identifies winner
+- 50%+ code coverage
+- Dice rolling animations when attacking, highlight available moves (optional)
