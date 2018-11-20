@@ -10,3 +10,11 @@ Hex::Hex()
     numberOfDice = 20;
     isSelected = false;
 }
+
+void Hex::makeAdjacentIfPossible()
+{
+    if (isSelectable)
+    {
+        isAdjacent = true;
+    }
+}
