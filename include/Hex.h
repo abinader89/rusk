@@ -3,11 +3,10 @@
 struct Hex
 {
     Player owner;
-    int numberOfDice;
-    int reinforced;
+    int numberOfArmies;
     bool isSelected;
     int x;
     int y;
-    Hex(int newNumberOfDice);
+    Hex(int newNumberOfArmies, int owner);
     Hex();
 };

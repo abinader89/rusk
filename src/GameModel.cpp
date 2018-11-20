@@ -17,7 +17,7 @@ GameModel::GameModel()
     }
     for (int i = 0; i < 2; ++i)
     {
-        players.push_back(Player());
+        players.push_back(Player(i));
     }
     board[0].isSelected = true;
 }

@@ -6,7 +6,7 @@ TESTDIR=testSuite
 SDLDIR=/Library/Frameworks/SDL2.framework/Headers
 
 CPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR)
-LINKERFLAGS=-lSDL2
+LINKERFLAGS=-lSDL2 -lSDL2_ttf -lSDL2_image
 
 TESTCPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR) -fprofile-arcs -ftest-coverage
 TESTLINKERFLAGS=-fprofile-arcs -lSDL2
@@ -42,7 +42,7 @@ Hex.test: $(SRCDIR)/Hex.cpp $(INCDIR)/Hex.h $(INCDIR)/Player.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
 GameModel.o: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h $(INCDIR)/Player.h
-	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $< 
 
 GameModel.test: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h $(INCDIR)/Player.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
