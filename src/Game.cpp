@@ -81,7 +81,7 @@ void Game::gameLoopUpdate()
         SDL_Rect hexSprite = hexSprites[i];
         SDL_Rect font_rect;
         SDL_Surface *hexSurface = hexSurfaces[i];
-        std::string hexFileName = "/vagrant/bmps/hex";
+        std::string hexFileName = "bmps/hex";
         hexFileName += gameModel.board[i].isSelected ? "Selected" : "Unselected";
         hexFileName += ".bmp";
         hexSurface = loadSurface(hexFileName);
@@ -97,7 +97,7 @@ void Game::gameLoopUpdate()
             exit(1);
         }
         TTF_Font* armyCountFont = NULL;
-        armyCountFont = TTF_OpenFont("/vagrant/fonts/armalite_rifle.ttf", 16);
+        armyCountFont = TTF_OpenFont("fonts/armalite_rifle.ttf", 16);
         if (!armyCountFont)
         {
             printf("TTF_OpenFont: %s\n", TTF_GetError());
@@ -122,7 +122,7 @@ void Game::gameLoopUpdate()
 void Game::playLoop(bool *outerQuit)
 {
     SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
-    SDL_Surface *background_surface  = loadSurface("/vagrant/bmps/gameScreenBackground.bmp");
+    SDL_Surface *background_surface  = loadSurface("bmps/gameScreenBackground.bmp");
     SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
     //Update the surface
     SDL_UpdateWindowSurface(window);
