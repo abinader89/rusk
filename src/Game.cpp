@@ -97,7 +97,7 @@ void Game::gameLoopUpdate()
             exit(1);
         }
         TTF_Font* armyCountFont = NULL;
-        armyCountFont = TTF_OpenFont("fonts/font.ttf", 16);
+        armyCountFont = TTF_OpenFont("fonts/font.otf", 16);
         if (!armyCountFont)
         {
             printf("TTF_OpenFont: %s\n", TTF_GetError());
