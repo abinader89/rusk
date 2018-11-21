@@ -17,7 +17,7 @@ CXXTEST_INCLUDE = $(CXXTEST_HOME)
 
 all: main test
 
-main: main.o Hex.o GameModel.o Game.o Player.o
+main: main.o Hex.o GameModel.o Game.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
 test: GameModel.test Hex.test GameModel.cxxtest.test runner.test
@@ -29,12 +29,6 @@ main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
 main.test: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
-Player.o: $(SRCDIR)/Player.cpp $(INCDIR)/Player.h
-	g++ $(CPPFLAGS) -o $(BINDIR)/$@ $<
-
-Player.test: $(SRCDIR)/Player.cpp $(INCDIR)/Player.h
-	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
-
 Hex.o: $(SRCDIR)/Hex.cpp $(INCDIR)/Hex.h $(INCDIR)/Player.h
 	g++ $(CPPFLAGS) -o $(BINDIR)/$@ $<
 
@@ -42,7 +36,7 @@ Hex.test: $(SRCDIR)/Hex.cpp $(INCDIR)/Hex.h $(INCDIR)/Player.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
 GameModel.o: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h $(INCDIR)/Player.h
-	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $< 
+	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
 GameModel.test: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h $(INCDIR)/Player.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
