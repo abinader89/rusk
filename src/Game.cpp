@@ -119,7 +119,7 @@ void Game::gameLoopUpdate()
             }
             else
             {
-                hexFileName += gameModel.board[i].isAdjacent && !gameModel.isInReinforcementStage ? "Adjacent" : "UnAdjacent";
+                hexFileName += gameModel.board[i].isAdjacent && !gameModel.isInReinforcementStage ? "Adjacent" : "Unadjacent";
                 hexFileName += gameModel.board[i].isSelected ? "Selected" : "Unselected";
                 hexFileName += ".bmp";
             }
