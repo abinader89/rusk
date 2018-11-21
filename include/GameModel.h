@@ -23,10 +23,13 @@ struct GameModel
     void endAttackMode();
 
 private:
-    void updateAdjacencies(int indexOfSelected);
-    void reinforce(int reinforceTargetIndex);
+    int currentSelectedIndex;
+    int currentAttackTargetIndex;
+
+    void updateAdjacencies();
+    void reinforce();
     void enterAttackMode();
-    void attack(int attackTargetIndex);
+    void attack();
     bool canChangeSelection(int direction);
     bool canChangeAttackTarget(int direction);
     void endGameWithWinner(int winningPlayer);
