@@ -3,14 +3,13 @@
 struct Hex
 {
     Player owner;
-    int numberOfDice;
-    int reinforced;
+    int numberOfArmies;
     bool isSelected;
     bool isAdjacent;
     bool isSelectable;
     int x;
     int y;
-    Hex(int newNumberOfDice);
+    Hex(int newNumberOfArmies, int owner);
     Hex();
     void makeAdjacentIfPossible();
 };

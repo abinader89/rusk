@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <string>
 
 Game::Game() : gameModel(), hexSprites() {
     for (int i = 0; i < gameModel.board.size(); ++i)
@@ -12,6 +13,7 @@ Game::Game() : gameModel(), hexSprites() {
 
 void Game::start()
 {
+    SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow("GameWindow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 750, 700, 0);
     SDL_SetWindowTitle(window, "RUSK");
     menuScreenLoop();
@@ -56,7 +58,28 @@ void Game::gameLoopUpdate()
     SDL_UpdateWindowSurface(window);
     for (int i = 0; i < gameModel.board.size(); ++i)
     {
+        SDL_Color color;
+        int current_player = gameModel.board[i].owner.player_number;
+        switch (current_player) {
+            case 0:
+            // red (player 1)
+            color = {255, 0, 0};
+            break;
+            case 1:
+            // blue (player 2)
+            color = {0, 0, 255};
+            break;
+            case 2:
+            // purple (player 3)
+            color = {128, 0, 128};
+            break;
+            case 3:
+            // black (unowned)
+            color = {0, 0, 0};
+            break;
+        }
         SDL_Rect hexSprite = hexSprites[i];
+        SDL_Rect font_rect;
         SDL_Surface *hexSurface = hexSurfaces[i];
         std::string hexFileName = "bmps/hex";
         hexFileName += gameModel.board[i].isAdjacent ? "Adjacent" : "UnAdjacent";
@@ -66,9 +89,34 @@ void Game::gameLoopUpdate()
 
         hexSprite.x = gameModel.board[i].x;
         hexSprite.y = gameModel.board[i].y;
+        
+        font_rect.x = hexSprite.x + 45;
+        font_rect.y = hexSprite.y + 40;
+        if (TTF_Init() == -1)
+        {
+            printf("TTF_Init: %s\n", TTF_GetError());
+            exit(1);
+        }
+        TTF_Font* armyCountFont = NULL;
+        armyCountFont = TTF_OpenFont("fonts/font.otf", 16);
+        if (!armyCountFont)
+        {
+            printf("TTF_OpenFont: %s\n", TTF_GetError());
+        }
+        int count = gameModel.board[i].numberOfArmies;
+        std::string count_string = std::to_string(count);
+        SDL_Surface* armyCount = TTF_RenderText_Solid(armyCountFont, count_string.c_str(), color);
+        if (!armyCount)
+        {
+            printf("TTF_RenderText_Solid: %s\n", TTF_GetError());
+        }
+
         SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
         SDL_BlitSurface(hexSurface, NULL, screenSurface, &hexSprite);
+        SDL_BlitSurface(armyCount, NULL, screenSurface, &font_rect);
         SDL_FreeSurface(hexSurface);
+        SDL_FreeSurface(armyCount);
+        TTF_CloseFont(armyCountFont);
     }
 }
 

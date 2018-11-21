@@ -1,15 +1,8 @@
 #include "Hex.h"
 
-Hex::Hex(int newNumberOfDice)
-{
-    numberOfDice = newNumberOfDice;
-}
+Hex::Hex(int player_number, int newNumberOfArmies) : owner(Player(player_number)), numberOfArmies(newNumberOfArmies) {};
 
-Hex::Hex()
-{
-    numberOfDice = 20;
-    isSelected = false;
-}
+Hex::Hex() : owner(Player(3)), numberOfArmies(0), isSelected(false) {};
 
 void Hex::makeAdjacentIfPossible()
 {
