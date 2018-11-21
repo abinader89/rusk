@@ -13,5 +13,9 @@ struct GameModel
     int boardHeight;
 
     GameModel();
+    bool canChangeSelection(int direction);
     void handleSelectionChange(int direction);
+
+private:
+    void updateAdjacencies(int indexOfSelected);
 };

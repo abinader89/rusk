@@ -59,6 +59,7 @@ void Game::gameLoopUpdate()
         SDL_Rect hexSprite = hexSprites[i];
         SDL_Surface *hexSurface = hexSurfaces[i];
         std::string hexFileName = "bmps/hex";
+        hexFileName += gameModel.board[i].isAdjacent ? "Adjacent" : "UnAdjacent";
         hexFileName += gameModel.board[i].isSelected ? "Selected" : "Unselected";
         hexFileName += ".bmp";
         hexSurface = loadSurface(hexFileName);

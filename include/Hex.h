@@ -6,8 +6,11 @@ struct Hex
     int numberOfDice;
     int reinforced;
     bool isSelected;
+    bool isAdjacent;
+    bool isSelectable;
     int x;
     int y;
     Hex(int newNumberOfDice);
     Hex();
+    void makeAdjacentIfPossible();
 };
