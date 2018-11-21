@@ -1,5 +1,3 @@
-#include "Player.h"
-
 struct Hex
 {
     int owner;
