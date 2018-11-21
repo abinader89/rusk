@@ -12,10 +12,19 @@ class Game
 
     void menuScreenLoop();
     void playLoop(bool *outerQuit);
+    void gameOverLoop(bool *outerQuit);
     void gameLoopUpdate();
     SDL_Surface* loadSurface(std::string);
 
+    TTF_Font *mainFont;
+
+    int screenWidth;
+    int screenHeight;
+
+    std::string backgroundImagePath;
+
 public:
     Game();
+    ~Game();
     void start();
 };

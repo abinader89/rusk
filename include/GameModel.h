@@ -5,17 +5,31 @@
 struct GameModel
 {
     std::vector<Hex> board;
-    std::vector<Player> players;
+    int numPlayers;
     int currentTurn;
     bool isInReinforcementStage;
-    int currentScreen;
+    int reinforcementsLeft;
+    bool isInAttackMode;
     int boardWidth;
     int boardHeight;
+    int winner;
 
     GameModel();
-    bool canChangeSelection(int direction);
+    void setupPangaeaGame();
+    void setupRiverGame();
     void handleSelectionChange(int direction);
+    void handleSelect();
+    void proceed();
+    void endAttackMode();
 
 private:
     void updateAdjacencies(int indexOfSelected);
+    void reinforce(int reinforceTargetIndex);
+    void enterAttackMode();
+    void attack(int attackTargetIndex);
+    bool canChangeSelection(int direction);
+    bool canChangeAttackTarget(int direction);
+    void endGameWithWinner(int winningPlayer);
+    void checkForWinner();
+    void calculateReinforcements();
 };
