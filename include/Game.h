@@ -8,8 +8,6 @@ class Game
 {
     GameModel gameModel;
     SDL_Window *window;
-    std::vector<SDL_Surface *> hexSurfaces;
-    std::vector<SDL_Rect> hexSprites;
 
     void menuScreenLoop();
     void playLoop(bool *outerQuit);
@@ -23,6 +21,11 @@ class Game
     int screenHeight;
 
     std::string backgroundImagePath;
+
+    SDL_Surface *unselectedUnadjacentHexSurface;
+    SDL_Surface *unselectedAdjacentHexSurface;
+    SDL_Surface *selectedHexSurface;
+    SDL_Surface *attackTargetSurface;
 
 public:
     Game();

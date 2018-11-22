@@ -1,22 +1,21 @@
 #include "Game.h"
 #include <string>
+#include <iostream>
 
-Game::Game() : hexSprites() {
+Game::Game()
+{
     screenWidth = 750;
     screenHeight = 700;
-    for (int i = 0; i < gameModel.board.size(); ++i)
-    {
-        SDL_Surface *newHexSurface;
-        hexSurfaces.push_back(newHexSurface);
-        SDL_Rect newHexSprite;
-        hexSprites.push_back(newHexSprite);
-    }
     if (TTF_Init() == -1)
     {
         printf("TTF_Init: %s\n", TTF_GetError());
         exit(1);
     }
     mainFont = TTF_OpenFont("fonts/font.otf", 16);
+    unselectedUnadjacentHexSurface = loadSurface("bmps/hexUnadjacentUnselected.bmp");
+    unselectedAdjacentHexSurface = loadSurface("bmps/hexAdjacentUnselected.bmp");
+    selectedHexSurface = loadSurface("bmps/hexSelected.bmp");
+    attackTargetSurface = loadSurface("bmps/hexAttackTarget.bmp");
 }
 
 void Game::start()
@@ -77,7 +76,7 @@ void Game::gameLoopUpdate()
 {
     SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
     SDL_Surface *background_surface  = loadSurface(backgroundImagePath);
-    SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
+    SDL_BlitSurface(background_surface, NULL, screenSurface, NULL);
     SDL_Color black = {0, 0, 0};
 
     for (int i = 0; i < gameModel.board.size(); ++i)
@@ -109,21 +108,9 @@ void Game::gameLoopUpdate()
                 default:
                     break;
             }
-            SDL_Rect hexSprite = hexSprites[i];
+
+            SDL_Rect hexSprite;
             SDL_Rect armyCountRect;
-            SDL_Surface *hexSurface = hexSurfaces[i];
-            std::string hexFileName = "bmps/hex";
-            if (gameModel.board[i].isAttackTarget)
-            {
-                hexFileName += "AttackTarget.bmp";
-            }
-            else
-            {
-                hexFileName += gameModel.board[i].isAdjacent && !gameModel.isInReinforcementStage ? "Adjacent" : "Unadjacent";
-                hexFileName += gameModel.board[i].isSelected ? "Selected" : "Unselected";
-                hexFileName += ".bmp";
-            }
-            hexSurface = loadSurface(hexFileName);
 
             hexSprite.x = gameModel.board[i].x;
             hexSprite.y = gameModel.board[i].y;
@@ -134,9 +121,23 @@ void Game::gameLoopUpdate()
             std::string count_string = std::to_string(count);
 
             SDL_Surface* armyCountSurface = TTF_RenderText_Solid(mainFont, count_string.c_str(), color);
-            SDL_BlitSurface(hexSurface, NULL, screenSurface, &hexSprite);
+            if (gameModel.board[i].isAttackTarget)
+            {
+                SDL_BlitSurface(attackTargetSurface, NULL, screenSurface, &hexSprite);
+            }
+            else if (gameModel.board[i].isSelected)
+            {
+                SDL_BlitSurface(selectedHexSurface, NULL, screenSurface, &hexSprite);
+            }
+            else if (gameModel.board[i].isAdjacent && !gameModel.isInReinforcementStage)
+            {
+                SDL_BlitSurface(unselectedAdjacentHexSurface, NULL, screenSurface, &hexSprite);
+            }
+            else
+            {
+                SDL_BlitSurface(unselectedUnadjacentHexSurface, NULL, screenSurface, &hexSprite);
+            }
             SDL_BlitSurface(armyCountSurface, NULL, screenSurface, &armyCountRect);
-            SDL_FreeSurface(hexSurface);
             SDL_FreeSurface(armyCountSurface);
         }
     }
@@ -165,8 +166,6 @@ void Game::gameLoopUpdate()
     SDL_Surface *reinforcementsLeftSurface = TTF_RenderText_Solid(mainFont, reinforcementsLeftString.c_str(), black);
     SDL_BlitSurface(reinforcementsLeftSurface, NULL, screenSurface, &reinforcementsLeftRect);
     SDL_FreeSurface(reinforcementsLeftSurface);
-
-
 
     SDL_UpdateWindowSurface(window);
 }
@@ -273,7 +272,7 @@ SDL_Surface* Game::loadSurface(std::string path)
 {
     //Load image at specified path
     SDL_Surface* loadedSurface = SDL_LoadBMP(path.c_str());
-    if( loadedSurface == NULL )
+    if(loadedSurface == NULL)
     {
         printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
     }
@@ -284,4 +283,8 @@ SDL_Surface* Game::loadSurface(std::string path)
 Game::~Game()
 {
     TTF_CloseFont(mainFont);
+    SDL_FreeSurface(unselectedUnadjacentHexSurface);
+    SDL_FreeSurface(unselectedAdjacentHexSurface);
+    SDL_FreeSurface(selectedHexSurface);
+    SDL_FreeSurface(attackTargetSurface);
 }
