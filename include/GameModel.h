@@ -1,5 +1,7 @@
-#include "Hex.h"
+#ifndef GAME_MODEL_H
+#define GAME_MODEL_H
 
+#include "Hex.h"
 #include <vector>
 
 struct GameModel
@@ -15,9 +17,7 @@ struct GameModel
     int winner;
     int maxArmiesPerHex;
 
-    GameModel();
-    void setupPangaeaGame();
-    void setupRiverGame();
+
     void handleSelectionChange(int direction);
     void handleSelect();
     void proceed();
@@ -36,4 +36,9 @@ private:
     void endGameWithWinner(int winningPlayer);
     void checkForWinner();
     void calculateReinforcements();
+
+protected:
+    GameModel();
 };
+
+#endif

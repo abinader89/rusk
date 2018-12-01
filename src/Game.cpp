@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "PangaeaGameModel.h"
+#include "RiverGameModel.h"
 #include <string>
 #include <iostream>
 
@@ -16,7 +18,6 @@ Game::Game()
     unselectedAdjacentHexSurface = loadSurface("bmps/hexAdjacentUnselected.bmp");
     selectedHexSurface = loadSurface("bmps/hexSelected.bmp");
     attackTargetSurface = loadSurface("bmps/hexAttackTarget.bmp");
-    gameModel = new GameModel();
 }
 
 void Game::start()
@@ -100,16 +101,22 @@ void Game::handleInput(SDL_Keycode input)
         {
             case SDLK_1:
                 backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
-                delete gameModel;
-                gameModel = new GameModel();
-                gameModel->setupPangaeaGame();
+                if (!firstTime)
+                {
+                    delete gameModel;
+                }
+                firstTime = false;
+                gameModel = new PangaeaGameModel();
                 currentScreen = 1;
                 break;
             case SDLK_2:
                 backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
-                delete gameModel;
-                gameModel = new GameModel();
-                gameModel->setupRiverGame();
+                if (!firstTime)
+                {
+                    delete gameModel;
+                }
+                firstTime = false;
+                gameModel = new RiverGameModel();
                 currentScreen = 1;
                 break;
             default:

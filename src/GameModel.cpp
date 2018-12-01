@@ -20,50 +20,12 @@ GameModel::GameModel()
 
         board.push_back(currentHex);
     }
-}
-
-void GameModel::setupPangaeaGame()
-{
-    numPlayers = 4;
     board[0].isSelected = true;
     currentSelectedIndex = 0;
     currentAttackTargetIndex = -1;
     board[1].isAdjacent = true;
     board[7].isAdjacent = true;
     board[8].isAdjacent = true;
-
-    board[0].owner = 0;
-    board[0].numberOfArmies = 5;
-
-    board[boardWidth - 1].owner = 1;
-    board[boardWidth - 1].numberOfArmies = 5;
-
-    board[board.size() - boardWidth].owner = 2;
-    board[board.size() - boardWidth].numberOfArmies = 5;
-
-    board[board.size() - 1].owner = 3;
-    board[board.size() - 1].numberOfArmies = 5;
-}
-
-void GameModel::setupRiverGame()
-{
-    numPlayers = 2;
-    board[0].isSelected = true;
-    currentSelectedIndex = 0;
-    currentAttackTargetIndex = -1;
-    board[1].isAdjacent = true;
-    board[7].isAdjacent = true;
-    board[8].isAdjacent = true;
-
-    board[0].owner = 0;
-    board[0].numberOfArmies = 5;
-    board[board.size() - 1].owner = 1;
-    board[board.size() - 1].numberOfArmies = 5;
-
-    board[3].isSelectable = false;
-    board[17].isSelectable = false;
-    board[31].isSelectable = false;
-
 }
 
 

@@ -17,10 +17,10 @@ CXXTEST_INCLUDE = $(CXXTEST_HOME)
 
 all: main test
 
-main: main.o Hex.o GameModel.o Game.o
+main: main.o Hex.o GameModel.o PangaeaGameModel.o RiverGameModel.o Game.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
-test: GameModel.test Hex.test GameModel.cxxtest.test runner.test
+test: GameModel.test Hex.test GameModel.cxxtest.test PangaeaGameModel.cxxtest.test RiverGameModel.cxxtest.test runner.test
 	g++ $(TESTLINKERFLAGS) $(addprefix $(BINDIR)/, $^) -I$(CXXTEST_INCLUDE) -o $@
 
 main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
@@ -45,6 +45,30 @@ GameModel.cxxtest.test: GameModel.cxxtest.cpp
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/GameModel.cxxtest.cpp -o $(BINDIR)/$@
 
 GameModel.cxxtest.cpp: $(TESTDIR)/GameModel.cxxtest.h $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h
+	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
+
+PangaeaGameModel.o: $(SRCDIR)/PangaeaGameModel.cpp $(INCDIR)/PangaeaGameModel.h $(INCDIR)/Hex.h
+	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+
+PangaeaGameModel.test: $(SRCDIR)/PangaeaGameModel.cpp $(INCDIR)/PangaeaGameModel.h $(INCDIR)/Hex.h
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+
+PangaeaGameModel.cxxtest.test: PangaeaGameModel.cxxtest.cpp
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/PangaeaGameModel.cxxtest.cpp -o $(BINDIR)/$@
+
+PangaeaGameModel.cxxtest.cpp: $(TESTDIR)/PangaeaGameModel.cxxtest.h $(SRCDIR)/PangaeaGameModel.cpp $(INCDIR)/PangaeaGameModel.h
+	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
+
+RiverGameModel.o: $(SRCDIR)/RiverGameModel.cpp $(INCDIR)/RiverGameModel.h $(INCDIR)/Hex.h
+	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+
+RiverGameModel.test: $(SRCDIR)/RiverGameModel.cpp $(INCDIR)/RiverGameModel.h $(INCDIR)/Hex.h
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+
+RiverGameModel.cxxtest.test: RiverGameModel.cxxtest.cpp
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/GameModel.cxxtest.cpp -o $(BINDIR)/$@
+
+RiverGameModel.cxxtest.cpp: $(TESTDIR)/RiverGameModel.cxxtest.h $(SRCDIR)/RiverGameModel.cpp $(INCDIR)/RiverGameModel.h
 	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
 
 Game.o: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
