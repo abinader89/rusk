@@ -13,6 +13,7 @@ struct GameModel
     int boardWidth;
     int boardHeight;
     int winner;
+    int maxArmiesPerHex;
 
     GameModel();
     void setupPangaeaGame();
