@@ -23,51 +23,133 @@ void Game::start()
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow("GameWindow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, 0);
     SDL_SetWindowTitle(window, "RUSK");
-    menuScreenLoop();
+    currentScreen = 0;
+    mainLoop();
 }
 
-void Game::menuScreenLoop()
+void Game::mainLoop()
 {
-
     bool quit = false;
     while (!quit)
     {
-        SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
-        SDL_Surface *background_surface  = loadSurface("bmps/menuScreenBackground.bmp");
-        SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
-        //Update the surface
-        SDL_UpdateWindowSurface(window);
         SDL_Event event;
-        while (SDL_PollEvent(&event))
+        while (SDL_WaitEvent(&event))
         {
             if(event.type == SDL_QUIT)
             {
                 quit = true;
                 break;
             }
-
             if (event.type == SDL_KEYDOWN)
     		{
-
-                switch (event.key.keysym.sym)
-    			{
-    				case SDLK_1:
-                        backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
-                        gameModel = GameModel();
-                        gameModel.setupPangaeaGame();
-                        playLoop(&quit);
-                        break;
-                    case SDLK_2:
-                        backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
-                        gameModel = GameModel();
-                        gameModel.setupRiverGame();
-                        playLoop(&quit);
-                        break;
-                    default:
-                        break;
-                }
-
+                handleInput(event.key.keysym.sym);
             }
+            update();
+            SDL_UpdateWindowSurface(window);
+        }
+    }
+}
+
+void Game::update()
+{
+    if (currentScreen == 0)
+    {
+        SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
+        SDL_Surface *background_surface  = loadSurface("bmps/menuScreenBackground.bmp");
+        SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
+        //Update the surface
+        SDL_FreeSurface(screenSurface);
+        SDL_FreeSurface(background_surface);
+    }
+
+    if (currentScreen == 1)
+    {
+        gameLoopUpdate();
+        if (gameModel.winner != -1)
+        {
+            currentScreen = 2;
+        }
+    }
+
+    if (currentScreen == 2)
+    {
+        SDL_Color black = {0, 0, 0};
+        SDL_Surface *background_surface  = loadSurface("bmps/gameOverBackground.bmp");
+        SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
+        SDL_BlitSurface(background_surface, NULL, screenSurface, NULL );
+        SDL_FreeSurface(background_surface);
+
+        SDL_Rect winnerRect;
+        winnerRect.x = screenWidth / 2;
+        winnerRect.y = screenHeight / 2;
+        std::string winnerString = "Player " + std::to_string(gameModel.winner + 1) + "Wins!";
+        SDL_Surface *winnerSurface = TTF_RenderText_Solid(mainFont, winnerString.c_str(), black);
+        SDL_BlitSurface(winnerSurface, NULL, screenSurface, &winnerRect);
+        SDL_FreeSurface(winnerSurface);
+        SDL_FreeSurface(screenSurface);
+    }
+}
+
+void Game::handleInput(SDL_Keycode input)
+{
+    if (currentScreen == 0)
+    {
+        switch (input)
+        {
+            case SDLK_1:
+                backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
+                gameModel = GameModel();
+                gameModel.setupPangaeaGame();
+                currentScreen = 1;
+                break;
+            case SDLK_2:
+                backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
+                gameModel = GameModel();
+                gameModel.setupRiverGame();
+                currentScreen = 1;
+                break;
+            default:
+                break;
+        }
+    }
+    if (currentScreen == 1)
+    {
+        switch (input)
+        {
+            case SDLK_UP:
+                gameModel.handleSelectionChange(0);
+                break;
+            case SDLK_DOWN:
+                gameModel.handleSelectionChange(1);
+                break;
+            case SDLK_LEFT:
+                gameModel.handleSelectionChange(2);
+                break;
+            case SDLK_RIGHT:
+                gameModel.handleSelectionChange(3);
+                break;
+            case SDLK_g:
+                gameModel.proceed();
+                break;
+            case SDLK_SPACE:
+                gameModel.handleSelect();
+                break;
+            case SDLK_ESCAPE:
+                gameModel.endAttackMode();
+                break;
+            default:
+                break;
+        }
+    }
+    if (currentScreen == 2)
+    {
+        switch (input)
+        {
+            case SDLK_ESCAPE:
+                currentScreen = 0;
+                break;
+            default:
+                break;
         }
     }
 }
@@ -77,6 +159,7 @@ void Game::gameLoopUpdate()
     SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
     SDL_Surface *background_surface  = loadSurface(backgroundImagePath);
     SDL_BlitSurface(background_surface, NULL, screenSurface, NULL);
+    SDL_FreeSurface(background_surface);
     SDL_Color black = {0, 0, 0};
 
     for (int i = 0; i < gameModel.board.size(); ++i)
@@ -139,6 +222,7 @@ void Game::gameLoopUpdate()
             }
             SDL_BlitSurface(armyCountSurface, NULL, screenSurface, &armyCountRect);
             SDL_FreeSurface(armyCountSurface);
+            SDL_FreeSurface(screenSurface);
         }
     }
 
@@ -166,106 +250,6 @@ void Game::gameLoopUpdate()
     SDL_Surface *reinforcementsLeftSurface = TTF_RenderText_Solid(mainFont, reinforcementsLeftString.c_str(), black);
     SDL_BlitSurface(reinforcementsLeftSurface, NULL, screenSurface, &reinforcementsLeftRect);
     SDL_FreeSurface(reinforcementsLeftSurface);
-
-    SDL_UpdateWindowSurface(window);
-}
-
-void Game::playLoop(bool *outerQuit)
-{
-    bool quit = false;
-    while (!quit)
-    {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                quit = true;
-                *outerQuit = true;
-                break;
-            }
-            if (event.type == SDL_KEYDOWN)
-            {
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_UP:
-                        gameModel.handleSelectionChange(0);
-                        break;
-                    case SDLK_DOWN:
-                        gameModel.handleSelectionChange(1);
-                        break;
-                    case SDLK_LEFT:
-                        gameModel.handleSelectionChange(2);
-                        break;
-                    case SDLK_RIGHT:
-                        gameModel.handleSelectionChange(3);
-                        break;
-                    case SDLK_g:
-                        gameModel.proceed();
-                        break;
-                    case SDLK_SPACE:
-                        gameModel.handleSelect();
-                        break;
-                    case SDLK_ESCAPE:
-                        gameModel.endAttackMode();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        gameLoopUpdate();
-        if (gameModel.winner != -1)
-        {
-            gameOverLoop(&quit);
-        }
-    }
-}
-
-void Game::gameOverLoop(bool *outerQuit)
-{
-    SDL_Color black = {0, 0, 0};
-    SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
-    SDL_Surface *background_surface  = loadSurface("bmps/gameOverBackground.bmp");
-    SDL_BlitSurface(background_surface, NULL, screenSurface, NULL );
-
-    SDL_Rect winnerRect;
-    winnerRect.x = screenWidth / 2;
-    winnerRect.y = screenHeight / 2;
-    std::string winnerString = "Player " + std::to_string(gameModel.winner + 1) + "Wins!";
-    SDL_Surface *winnerSurface = TTF_RenderText_Solid(mainFont, winnerString.c_str(), black);
-    SDL_BlitSurface(winnerSurface, NULL, screenSurface, &winnerRect);
-    SDL_FreeSurface(winnerSurface);
-
-    //Update the surface
-    SDL_UpdateWindowSurface(window);
-    bool quit = false;
-    while (!quit)
-    {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                quit = true;
-                *outerQuit = true;
-                break;
-            }
-            if (event.type == SDL_KEYDOWN)
-            {
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_ESCAPE:
-                        quit = true;
-                        *outerQuit = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-    }
 }
 
 SDL_Surface* Game::loadSurface(std::string path)

@@ -13,12 +13,21 @@ class Game
     void playLoop(bool *outerQuit);
     void gameOverLoop(bool *outerQuit);
     void gameLoopUpdate();
+
+    void mainLoop();
+    void setup();
+    void update();
+
+    void handleInput(SDL_Keycode input);
+
     SDL_Surface* loadSurface(std::string);
 
     TTF_Font *mainFont;
 
     int screenWidth;
     int screenHeight;
+
+    int currentScreen;
 
     std::string backgroundImagePath;
 
