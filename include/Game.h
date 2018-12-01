@@ -6,12 +6,9 @@
 
 class Game
 {
-    GameModel gameModel;
+    GameModel *gameModel;
     SDL_Window *window;
 
-    void menuScreenLoop();
-    void playLoop(bool *outerQuit);
-    void gameOverLoop(bool *outerQuit);
     void gameLoopUpdate();
 
     void mainLoop();
