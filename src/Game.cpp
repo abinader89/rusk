@@ -32,21 +32,16 @@ void Game::mainLoop()
     bool quit = false;
     while (!quit)
     {
-        std::cout << "outer loop" << std::endl;
-
         SDL_Event event;
         while (SDL_WaitEvent(&event))
         {
-            //std::cout << event.type << std::endl;
             if(event.type == SDL_QUIT)
             {
-                std::cout << "quit!" << std::endl;
                 quit = true;
                 break;
             }
             if (event.type == SDL_KEYDOWN)
     		{
-                std::cout << "keydown!" << std::endl;
                 handleInput(event.key.keysym.sym);
             }
             update();
@@ -63,9 +58,8 @@ void Game::update()
         SDL_Surface *background_surface  = loadSurface("bmps/menuScreenBackground.bmp");
         SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
         //Update the surface
-        SDL_UpdateWindowSurface(window);
-        //SDL_FreeSurface(screenSurface);
-        //SDL_FreeSurface(background_surface);
+        SDL_FreeSurface(screenSurface);
+        SDL_FreeSurface(background_surface);
     }
 
     if (currentScreen == 1)
@@ -98,8 +92,6 @@ void Game::update()
 
 void Game::handleInput(SDL_Keycode input)
 {
-    std::cout << "handle input!" << std::endl;
-    std::cout << "currentScreen: " << currentScreen << std::endl;
     if (currentScreen == 0)
     {
         switch (input)
