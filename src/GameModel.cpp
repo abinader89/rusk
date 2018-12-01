@@ -1,10 +1,13 @@
 #include "GameModel.h"
+#include <stdlib.h>
 
 GameModel::GameModel()
 {
+    winner = -1;
     currentTurn = 0;
-    isInReinforcementStage = false;
-    currentScreen = 0;
+    isInReinforcementStage = true;
+    isInAttackMode = false;
+    reinforcementsLeft = 0;
     boardWidth = 7;
     boardHeight = 5;
     for (int i = 0; i < (boardWidth * boardHeight); ++i)
@@ -16,60 +19,100 @@ GameModel::GameModel()
 
         board.push_back(currentHex);
     }
-    for (int i = 0; i < 2; ++i)
-    {
-        players.push_back(Player(i));
-    }
+}
+
+void GameModel::setupPangaeaGame()
+{
+    numPlayers = 4;
     board[0].isSelected = true;
+    currentSelectedIndex = 0;
+    currentAttackTargetIndex = -1;
     board[1].isAdjacent = true;
     board[7].isAdjacent = true;
     board[8].isAdjacent = true;
+
+    board[0].owner = 0;
+    board[0].numberOfArmies = 5;
+
+    board[boardWidth - 1].owner = 1;
+    board[boardWidth - 1].numberOfArmies = 5;
+
+    board[board.size() - boardWidth].owner = 2;
+    board[board.size() - boardWidth].numberOfArmies = 5;
+
+    board[board.size() - 1].owner = 3;
+    board[board.size() - 1].numberOfArmies = 5;
 }
 
-void GameModel::updateAdjacencies(int indexOfSelected)
+void GameModel::setupRiverGame()
 {
-    if (indexOfSelected > 0 && indexOfSelected % boardWidth != 0)
-    {
-        board[indexOfSelected - 1].makeAdjacentIfPossible();
-    }
-    if (indexOfSelected < board.size() - 1 && indexOfSelected % boardWidth != (boardWidth - 1))
-    {
-        board[indexOfSelected + 1].makeAdjacentIfPossible();
-    }
-    if (indexOfSelected >= boardWidth)
-    {
-        board[indexOfSelected - boardWidth].makeAdjacentIfPossible();
-        if ((indexOfSelected / boardWidth) % 2 == 0)
-        {
-            if (indexOfSelected % boardWidth != (boardWidth - 1))
-            {
-                board[indexOfSelected - boardWidth + 1].makeAdjacentIfPossible();
-            }
-        }
-        else
-        {
-            if (indexOfSelected % boardWidth != 0)
-            {
-                board[indexOfSelected - boardWidth - 1].makeAdjacentIfPossible();
-            }
-        }
-    }
-    if (indexOfSelected < boardWidth * (boardHeight - 1))
-    {
-        board[indexOfSelected + boardWidth].makeAdjacentIfPossible();
+    numPlayers = 2;
+    board[0].isSelected = true;
+    currentSelectedIndex = 0;
+    currentAttackTargetIndex = -1;
+    board[1].isAdjacent = true;
+    board[7].isAdjacent = true;
+    board[8].isAdjacent = true;
 
-        if ((indexOfSelected / boardWidth) % 2 == 0)
+    board[0].owner = 0;
+    board[0].numberOfArmies = 5;
+    board[board.size() - 1].owner = 1;
+    board[board.size() - 1].numberOfArmies = 5;
+
+    board[3].isSelectable = false;
+    board[17].isSelectable = false;
+    board[31].isSelectable = false;
+
+}
+
+
+void GameModel::updateAdjacencies()
+{
+    if (board[currentSelectedIndex].isSelectable)
+    {
+        if (currentSelectedIndex > 0 && currentSelectedIndex % boardWidth != 0)
         {
-            if (indexOfSelected % boardWidth != (boardWidth - 1))
+            board[currentSelectedIndex - 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+        }
+        if (currentSelectedIndex < board.size() - 1 && currentSelectedIndex % boardWidth != (boardWidth - 1))
+        {
+            board[currentSelectedIndex + 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+        }
+        if (currentSelectedIndex >= boardWidth)
+        {
+            board[currentSelectedIndex - boardWidth].makeAdjacentIfPossible(currentTurn % numPlayers);
+            if ((currentSelectedIndex / boardWidth) % 2 == 0)
             {
-                board[indexOfSelected + boardWidth + 1].makeAdjacentIfPossible();
+                if (currentSelectedIndex % boardWidth != (boardWidth - 1))
+                {
+                    board[currentSelectedIndex - boardWidth + 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+                }
+            }
+            else
+            {
+                if (currentSelectedIndex % boardWidth != 0)
+                {
+                    board[currentSelectedIndex - boardWidth - 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+                }
             }
         }
-        else
+        if (currentSelectedIndex < boardWidth * (boardHeight - 1))
         {
-            if (indexOfSelected % boardWidth != 0)
+            board[currentSelectedIndex + boardWidth].makeAdjacentIfPossible(currentTurn % numPlayers);
+
+            if ((currentSelectedIndex / boardWidth) % 2 == 0)
             {
-                board[indexOfSelected + boardWidth - 1].makeAdjacentIfPossible();
+                if (currentSelectedIndex % boardWidth != (boardWidth - 1))
+                {
+                    board[currentSelectedIndex + boardWidth + 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+                }
+            }
+            else
+            {
+                if (currentSelectedIndex % boardWidth != 0)
+                {
+                    board[currentSelectedIndex + boardWidth - 1].makeAdjacentIfPossible(currentTurn % numPlayers);
+                }
             }
         }
     }
@@ -81,24 +124,39 @@ void GameModel::updateAdjacencies(int indexOfSelected)
 //3 = right
 bool GameModel::canChangeSelection(int direction)
 {
-    for (int i = 0; i < board.size(); ++i)
+
+    switch (direction)
     {
-        if (board[i].isSelected)
-        {
-            switch (direction)
-            {
-                case 0:
-                    return i >= boardWidth;
-                case 1:
-                    return (i < boardWidth * (boardHeight - 1));
-                case 2:
-                    return (i > 0);
-                case 3:
-                    return (i < board.size() - 1);
-            }
-        }
+        case 0:
+            return currentSelectedIndex >= boardWidth;
+        case 1:
+            return (currentSelectedIndex < boardWidth * (boardHeight - 1));
+        case 2:
+            return (currentSelectedIndex > 0);
+        case 3:
+            return (currentSelectedIndex < board.size() - 1);
+        //shouldn't happen - just here to suppress warning (will get fixed once we use class enums)
+        default:
+            return false;
     }
-    return false;
+}
+
+bool GameModel::canChangeAttackTarget(int direction)
+{
+    switch (direction)
+    {
+        case 0:
+            return currentAttackTargetIndex >= boardWidth;
+        case 1:
+            return (currentAttackTargetIndex < boardWidth * (boardHeight - 1));
+        case 2:
+            return (currentAttackTargetIndex > 0);
+        case 3:
+            return (currentAttackTargetIndex < board.size() - 1);
+        //shouldn't happen - just here to suppress warning (will get fixed once we use class enums)
+        default:
+            return false;
+    }
 }
 
 //0 = up
@@ -108,41 +166,269 @@ bool GameModel::canChangeSelection(int direction)
 //TODO: this will need to change once we have more than a basic grid
 void GameModel::handleSelectionChange(int direction)
 {
-    if (canChangeSelection(direction))
+    if (isInAttackMode)
     {
-        for (int i = 0; i < board.size(); ++i)
+        if (currentAttackTargetIndex != -1 && canChangeAttackTarget(direction))
         {
-            board[i].isAdjacent = false;
-        }
-        for (int i = 0; i < board.size(); ++i)
-        {
-            if (board[i].isSelected)
+            switch (direction)
             {
-                switch (direction)
-                {
-                    case 0:
-                        board[i].isSelected = false;
-                        board[i - boardWidth].isSelected = true;
-                        updateAdjacencies(i - boardWidth);
-                        break;
-                    case 1:
-                        board[i].isSelected = false;
-                        board[i + boardWidth].isSelected = true;
-                        updateAdjacencies(i + boardWidth);
-                        break;
-                    case 2:
-                        board[i].isSelected = false;
-                        board[i - 1].isSelected = true;
-                        updateAdjacencies(i - 1);
-                        break;
-                    case 3:
-                        board[i].isSelected = false;
-                        board[i + 1].isSelected = true;
-                        updateAdjacencies(i + 1);
-                        break;
-                }
-                return;
+                case 0:
+                    if (board[currentAttackTargetIndex - boardWidth].isAdjacent)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        board[currentAttackTargetIndex - boardWidth].isAttackTarget = true;
+                        currentAttackTargetIndex = currentAttackTargetIndex - boardWidth;
+                    }
+                    if (board[currentAttackTargetIndex - boardWidth].isSelected)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        currentAttackTargetIndex = -1;
+                    }
+                    break;
+                case 1:
+                    if (board[currentAttackTargetIndex + boardWidth].isAdjacent)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        board[currentAttackTargetIndex + boardWidth].isAttackTarget = true;
+                        currentAttackTargetIndex = currentAttackTargetIndex + boardWidth;
+                    }
+                    if (board[currentAttackTargetIndex + boardWidth].isSelected)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        currentAttackTargetIndex = -1;
+                    }
+                    break;
+                case 2:
+                    if (board[currentAttackTargetIndex - 1].isAdjacent)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        board[currentAttackTargetIndex - 1].isAttackTarget = true;
+                        currentAttackTargetIndex = currentAttackTargetIndex - 1;
+                    }
+                    if (board[currentAttackTargetIndex - 1].isSelected)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        currentAttackTargetIndex = -1;
+                    }
+                    break;
+                case 3:
+                    if (board[currentAttackTargetIndex + 1].isAdjacent)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        board[currentAttackTargetIndex + 1].isAttackTarget = true;
+                        currentAttackTargetIndex = currentAttackTargetIndex + 1;
+                    }
+                    if (board[currentAttackTargetIndex + 1].isSelected)
+                    {
+                        board[currentAttackTargetIndex].isAttackTarget = false;
+                        currentAttackTargetIndex = -1;
+                    }
+                    break;
             }
+            return;
         }
+        if (canChangeSelection(direction))
+        {
+            switch (direction)
+            {
+                case 0:
+                    if (board[currentSelectedIndex - boardWidth].isAdjacent)
+                    {
+                        board[currentSelectedIndex - boardWidth].isAttackTarget = true;
+                        currentAttackTargetIndex = currentSelectedIndex - boardWidth;
+                    }
+                    break;
+                case 1:
+                    if (board[currentSelectedIndex + boardWidth].isAdjacent)
+                    {
+                        board[currentSelectedIndex + boardWidth].isAttackTarget = true;
+                        currentAttackTargetIndex = currentSelectedIndex + boardWidth;
+                    }
+                    break;
+                case 2:
+                    if (board[currentSelectedIndex - 1].isAdjacent)
+                    {
+                        board[currentSelectedIndex - 1].isAttackTarget = true;
+                        currentAttackTargetIndex = currentSelectedIndex - 1;
+                    }
+                    break;
+                case 3:
+                    if (board[currentSelectedIndex + 1].isAdjacent)
+                    {
+                        board[currentSelectedIndex + 1].isAttackTarget = true;
+                        currentAttackTargetIndex = currentSelectedIndex + 1;
+                    }
+                    break;
+            }
+            return;
+        }
+    }
+    else
+    {
+
+        if (canChangeSelection(direction))
+        {
+            for (int i = 0; i < board.size(); ++i)
+            {
+                board[i].isAdjacent = false;
+            }
+            board[currentSelectedIndex].isSelected = false;
+            switch (direction)
+            {
+                case 0:
+                    board[currentSelectedIndex - boardWidth].isSelected = true;
+                    currentSelectedIndex = currentSelectedIndex - boardWidth;
+                    updateAdjacencies();
+                    break;
+                case 1:
+                    board[currentSelectedIndex + boardWidth].isSelected = true;
+                    currentSelectedIndex = currentSelectedIndex + boardWidth;
+                    updateAdjacencies();
+                    break;
+                case 2:
+                    board[currentSelectedIndex - 1].isSelected = true;
+                    currentSelectedIndex = currentSelectedIndex - 1;
+                    updateAdjacencies();
+                    break;
+                case 3:
+                    board[currentSelectedIndex + 1].isSelected = true;
+                    currentSelectedIndex = currentSelectedIndex + 1;
+                    updateAdjacencies();
+                    break;
+            }
+            return;
+        }
+    }
+}
+
+void GameModel::calculateReinforcements()
+{
+    for (int i = 0; i < board.size(); ++i)
+    {
+        if (board[i].owner == currentTurn % numPlayers)
+        {
+            ++reinforcementsLeft;
+        }
+    }
+}
+
+void GameModel::proceed()
+{
+    if (isInReinforcementStage)
+    {
+        isInReinforcementStage = false;
+    }
+    else
+    {
+        isInReinforcementStage = true;
+        reinforcementsLeft = 0;
+        while (reinforcementsLeft == 0)
+        {
+            ++currentTurn;
+            calculateReinforcements();
+        }
+    }
+}
+
+void GameModel::checkForWinner()
+{
+    std::vector<int> hexesLeft;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        hexesLeft.push_back(0);
+    }
+    for (int i = 0; i < board.size(); ++i)
+    {
+        if (board[i].owner != -1)
+        {
+            ++hexesLeft[board[i].owner];
+        }
+    }
+    int playersLeft = 0;
+    int winnerIfDone = -1;
+    for (int i = 0; i < hexesLeft.size(); ++i)
+    {
+        if (hexesLeft[i] > 0)
+        {
+            ++playersLeft;
+            winnerIfDone = i;
+        }
+    }
+    if (playersLeft == 1)
+    {
+        winner = winnerIfDone;
+    }
+}
+
+void GameModel::enterAttackMode()
+{
+    isInAttackMode = true;
+}
+
+void GameModel::endAttackMode()
+{
+    for (int i = 0; i < board.size(); ++i)
+    {
+        board[i].isAttackTarget = false;
+        currentAttackTargetIndex = -1;
+    }
+    isInAttackMode = false;
+    checkForWinner();
+}
+
+void GameModel::reinforce()
+{
+    if (board[currentSelectedIndex].owner == currentTurn % numPlayers)
+    {
+        if (reinforcementsLeft > 0)
+        {
+            ++board[currentSelectedIndex].numberOfArmies;
+            --reinforcementsLeft;
+        }
+    }
+}
+
+void GameModel::attack()
+{
+    int attackerTotalRoll = 0;
+    int defenderTotalRoll = 0;
+
+    for (int i = 0; i < board[currentSelectedIndex].numberOfArmies; ++i)
+    {
+        attackerTotalRoll += rand() % 6 + 1;
+    }
+    for (int i = 0; i < board[currentAttackTargetIndex].numberOfArmies; ++i)
+    {
+        defenderTotalRoll += rand() % 6 + 1;
+    }
+
+    if (attackerTotalRoll > defenderTotalRoll)
+    {
+        board[currentAttackTargetIndex].owner = currentTurn % numPlayers;
+        board[currentAttackTargetIndex].isAdjacent = false;
+        board[currentAttackTargetIndex].numberOfArmies = board[currentSelectedIndex].numberOfArmies - 1;
+    }
+    board[currentSelectedIndex].numberOfArmies = 1;
+    endAttackMode();
+}
+
+void GameModel::handleSelect()
+{
+    if (!isInReinforcementStage)
+    {
+        if (currentAttackTargetIndex != -1)
+        {
+            attack();
+            return;
+        }
+        else if (board[currentSelectedIndex].owner == currentTurn % numPlayers &&
+            board[currentSelectedIndex].numberOfArmies > 1)
+        {
+            enterAttackMode();
+        }
+    }
+    else
+    {
+        reinforce();
     }
 }

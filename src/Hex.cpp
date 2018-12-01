@@ -1,12 +1,12 @@
 #include "Hex.h"
 
-Hex::Hex(int player_number, int newNumberOfArmies) : owner(Player(player_number)), numberOfArmies(newNumberOfArmies) {};
+Hex::Hex(int player_number, int newNumberOfArmies) : owner(player_number), numberOfArmies(newNumberOfArmies) {};
 
-Hex::Hex() : owner(Player(3)), numberOfArmies(0), isSelected(false) {};
+Hex::Hex() : owner(-1), numberOfArmies(0), isSelected(false), isAttackTarget(false) {};
 
-void Hex::makeAdjacentIfPossible()
+void Hex::makeAdjacentIfPossible(int currentPlayer)
 {
-    if (isSelectable)
+    if (isSelectable && currentPlayer != owner)
     {
         isAdjacent = true;
     }
