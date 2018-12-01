@@ -10,6 +10,7 @@ GameModel::GameModel()
     reinforcementsLeft = 0;
     boardWidth = 7;
     boardHeight = 5;
+    maxArmiesPerHex = 20;
     for (int i = 0; i < (boardWidth * boardHeight); ++i)
     {
         Hex currentHex;
@@ -380,7 +381,8 @@ void GameModel::reinforce()
 {
     if (board[currentSelectedIndex].owner == currentTurn % numPlayers)
     {
-        if (reinforcementsLeft > 0)
+        if (reinforcementsLeft > 0 &&
+            board[currentSelectedIndex].numberOfArmies < maxArmiesPerHex)
         {
             ++board[currentSelectedIndex].numberOfArmies;
             --reinforcementsLeft;

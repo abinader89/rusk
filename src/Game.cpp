@@ -161,6 +161,7 @@ void Game::gameLoopUpdate()
     SDL_BlitSurface(background_surface, NULL, screenSurface, NULL);
     SDL_FreeSurface(background_surface);
     SDL_Color black = {0, 0, 0};
+    SDL_Color white = {255, 255, 255};
 
     for (int i = 0; i < gameModel.board.size(); ++i)
     {
@@ -186,7 +187,7 @@ void Game::gameLoopUpdate()
                     break;
                 case -1:
                     // black (unowned)
-                    color = black;
+                    color = white;
                     break;
                 default:
                     break;
@@ -203,7 +204,7 @@ void Game::gameLoopUpdate()
             int count = gameModel.board[i].numberOfArmies;
             std::string count_string = std::to_string(count);
 
-            SDL_Surface* armyCountSurface = TTF_RenderText_Solid(mainFont, count_string.c_str(), color);
+            SDL_Surface* armyCountSurface = TTF_RenderText_Shaded(mainFont, count_string.c_str(), black, color);
             if (gameModel.board[i].isAttackTarget)
             {
                 SDL_BlitSurface(attackTargetSurface, NULL, screenSurface, &hexSprite);
