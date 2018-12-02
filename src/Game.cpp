@@ -108,8 +108,8 @@ void Game::handleMouseInput(SDL_Event e)
         case SDL_BUTTON_LEFT:
             if (mouseX > 500
                 && mouseX < 700 
-                && mouseY > 600 
-                && mouseY < 651)
+                && mouseY > 585 
+                && mouseY < 685)
             {
                backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
                gameModel = GameModel();
@@ -118,8 +118,8 @@ void Game::handleMouseInput(SDL_Event e)
                map_selected = true;
             } else if (mouseX > 50 
             && mouseX < 250 
-            && mouseY > 600 
-            && mouseY < 651)
+            && mouseY > 585 
+            && mouseY < 685)
             {
             backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
             gameModel = GameModel();
@@ -129,8 +129,8 @@ void Game::handleMouseInput(SDL_Event e)
             }
             else if (mouseX > 275
                 && mouseX < 480
-                && mouseY > 600
-                && mouseY < 700)
+                && mouseY > 585
+                && mouseY < 685)
             {
                 SDL_ShowSimpleMessageBox(0, "Coming Soon", "Map not yet implemented.", window);
             }
