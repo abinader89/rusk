@@ -9,7 +9,7 @@ CPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR)
 LINKERFLAGS=-lSDL2 -lSDL2_ttf -lSDL2_image
 
 TESTCPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR) -fprofile-arcs -ftest-coverage
-TESTLINKERFLAGS=-fprofile-arcs -lSDL2
+TESTLINKERFLAGS=-fprofile-arcs -lSDL2 -lSDL2_ttf -lSDL2_image
 
 CXXTEST_HOME ?= cxxtest-4.4
 CXXTEST_GEN = $(CXXTEST_HOME)/bin/cxxtestgen
@@ -20,7 +20,7 @@ all: main test
 main: main.o Hex.o GameModel.o Game.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
-test: GameModel.test Hex.test GameModel.cxxtest.test runner.test
+test: GameModel.test Game.test Hex.test GameModel.cxxtest.test Game.cxxtest.test runner.test
 	g++ $(TESTLINKERFLAGS) $(addprefix $(BINDIR)/, $^) -I$(CXXTEST_INCLUDE) -o $@
 
 main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
@@ -52,6 +52,12 @@ Game.o: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
 
 Game.test: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
+
+Game.cxxtest.test: Game.cxxtest.cpp
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/Game.cxxtest.cpp -o $(BINDIR)/$@
+
+Game.cxxtest.cpp: $(TESTDIR)/Game.cxxtest.h $(SRCDIR)/Game.cpp $(INCDIR)/Game.h
+	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
 
 runner.cpp:
 	$(CXXTEST_GEN) --root --error-printer -o $@

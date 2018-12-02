@@ -304,3 +304,8 @@ Game::~Game()
     SDL_FreeSurface(selectedHexSurface);
     SDL_FreeSurface(attackTargetSurface);
 }
+
+GameModel* Game::getGameModel()
+{
+    return &gameModel;
+}

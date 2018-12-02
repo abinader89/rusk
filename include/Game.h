@@ -44,4 +44,5 @@ public:
     Game();
     ~Game();
     void start();
+    GameModel* getGameModel();
 };
