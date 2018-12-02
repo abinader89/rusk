@@ -1,2 +1,4 @@
 All of the assets we are currently using were created by people in our group.
 For help setting up SDL2 and showing images, we used 'Lazy Foo Productions' tutorials.
+the camoprint bmp used in the menu screen is cc0 and from the url:
+https://www.1001freedownloads.com/free-clipart/camouflage-army-print.

@@ -106,9 +106,8 @@ void Game::handleMouseInput(SDL_Event e)
     switch (mouse_input)
     {   
         case SDL_BUTTON_LEFT:
-            std::cout << mouseX << " " << mouseY << std::endl;
-            if (mouseX > 497 
-                && mouseX < 613 
+            if (mouseX > 500
+                && mouseX < 700 
                 && mouseY > 600 
                 && mouseY < 651)
             {
@@ -117,8 +116,8 @@ void Game::handleMouseInput(SDL_Event e)
                gameModel.setupPangaeaGame();
                currentScreen = 1;
                map_selected = true;
-            } else if (mouseX > 91 
-            && mouseX < 197 
+            } else if (mouseX > 50 
+            && mouseX < 250 
             && mouseY > 600 
             && mouseY < 651)
             {
@@ -128,8 +127,8 @@ void Game::handleMouseInput(SDL_Event e)
             currentScreen = 1;
             map_selected = true;
             }
-            else if (mouseX > 286
-                && mouseX < 403
+            else if (mouseX > 275
+                && mouseX < 480
                 && mouseY > 600
                 && mouseY < 700)
             {
