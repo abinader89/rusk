@@ -9,6 +9,8 @@ class Game
     GameModel gameModel;
     SDL_Window *window;
 
+    bool map_selected = false;
+
     void menuScreenLoop();
     void playLoop(bool *outerQuit);
     void gameOverLoop(bool *outerQuit);

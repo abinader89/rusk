@@ -96,6 +96,10 @@ void Game::update()
 
 void Game::handleMouseInput(SDL_Event e)
 {
+    if (map_selected)
+    {
+        return;
+    }
     Uint32 mouse_input = e.button.button;
     int mouseX = e.motion.x;
     int mouseY = e.motion.y;
@@ -112,6 +116,7 @@ void Game::handleMouseInput(SDL_Event e)
                gameModel = GameModel();
                gameModel.setupPangaeaGame();
                currentScreen = 1;
+               map_selected = true;
             } else if (mouseX > 91 
             && mouseX < 197 
             && mouseY > 600 
@@ -121,6 +126,7 @@ void Game::handleMouseInput(SDL_Event e)
             gameModel = GameModel();
             gameModel.setupRiverGame();
             currentScreen = 1;
+            map_selected = true;
             }
             else if (mouseX > 286
                 && mouseX < 403
