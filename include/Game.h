@@ -18,7 +18,9 @@ class Game
     void setup();
     void update();
 
-    void handleInput(SDL_Keycode input);
+    void handleInput(SDL_Event input);
+
+    void handleMouseInput(SDL_Event input);
 
     SDL_Surface* loadSurface(std::string);
 
