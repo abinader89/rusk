@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "PangaeaGameModel.h"
 #include "RiverGameModel.h"
+#include "RingGameModel.h"
 #include <string>
 #include <iostream>
 
@@ -144,7 +145,14 @@ void Game::handleMouseInput(SDL_Event e)
                 && mouseY > 585
                 && mouseY < 685)
             {
-                SDL_ShowSimpleMessageBox(0, "Coming Soon", "Map not yet implemented.", window);
+                backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
+                if (!firstTime)
+                {
+                    delete gameModel;
+                }
+                firstTime = false;
+                gameModel = new RingGameModel();
+                currentScreen = 1;
             }
             break;
         default:
