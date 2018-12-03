@@ -126,7 +126,6 @@ bool GameModel::canChangeAttackTarget(int direction)
 //1 = down
 //2 = left
 //3 = right
-//TODO: this will need to change once we have more than a basic grid
 void GameModel::handleSelectionChange(int direction)
 {
     if (isInAttackMode)
