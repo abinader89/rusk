@@ -1,3 +1,6 @@
+#ifndef HEX_H
+#define HEX_H
+
 struct Hex
 {
     int owner;
@@ -12,3 +15,5 @@ struct Hex
     Hex();
     void makeAdjacentIfPossible(int currentPlayer);
 };
+
+#endif

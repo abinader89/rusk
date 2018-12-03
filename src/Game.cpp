@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "PangaeaGameModel.h"
+#include "RiverGameModel.h"
 #include <string>
 #include <iostream>
 
@@ -60,6 +62,7 @@ void Game::update()
     {
         SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
         SDL_Surface *background_surface  = loadSurface("bmps/menuScreenBackground.bmp");
+
         SDL_BlitSurface( background_surface, NULL, screenSurface, NULL );
         //Update the surface
         SDL_FreeSurface(screenSurface);
@@ -69,7 +72,7 @@ void Game::update()
     if (currentScreen == 1)
     {
         gameLoopUpdate();
-        if (gameModel.winner != -1)
+        if (gameModel->winner != -1)
         {
             currentScreen = 2;
         }
@@ -86,7 +89,7 @@ void Game::update()
         SDL_Rect winnerRect;
         winnerRect.x = screenWidth / 2;
         winnerRect.y = screenHeight / 2;
-        std::string winnerString = "Player " + std::to_string(gameModel.winner + 1) + "Wins!";
+        std::string winnerString = "Player " + std::to_string(gameModel->winner + 1) + "Wins!";
         SDL_Surface *winnerSurface = TTF_RenderText_Solid(mainFont, winnerString.c_str(), black);
         SDL_BlitSurface(winnerSurface, NULL, screenSurface, &winnerRect);
         SDL_FreeSurface(winnerSurface);
@@ -104,28 +107,37 @@ void Game::handleMouseInput(SDL_Event e)
     int mouseX = e.motion.x;
     int mouseY = e.motion.y;
     switch (mouse_input)
-    {   
+    {
         case SDL_BUTTON_LEFT:
             if (mouseX > 500
-                && mouseX < 700 
-                && mouseY > 585 
+                && mouseX < 700
+                && mouseY > 585
                 && mouseY < 685)
             {
-               backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
-               gameModel = GameModel();
-               gameModel.setupPangaeaGame();
-               currentScreen = 1;
-               map_selected = true;
-            } else if (mouseX > 50 
-            && mouseX < 250 
-            && mouseY > 585 
+
+                backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
+                if (!firstTime)
+                {
+                    delete gameModel;
+                }
+                firstTime = false;
+                gameModel = new PangaeaGameModel();
+                currentScreen = 1;
+            }
+            else if (mouseX > 50
+            && mouseX < 250
+            && mouseY > 585
             && mouseY < 685)
             {
-            backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
-            gameModel = GameModel();
-            gameModel.setupRiverGame();
-            currentScreen = 1;
-            map_selected = true;
+
+                backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
+                if (!firstTime)
+                {
+                    delete gameModel;
+                }
+                firstTime = false;
+                gameModel = new RiverGameModel();
+                currentScreen = 1;
             }
             else if (mouseX > 275
                 && mouseX < 480
@@ -148,25 +160,25 @@ void Game::handleInput(SDL_Event e)
         switch (key_input)
         {
             case SDLK_UP:
-                gameModel.handleSelectionChange(0);
+                gameModel->handleSelectionChange(0);
                 break;
             case SDLK_DOWN:
-                gameModel.handleSelectionChange(1);
+                gameModel->handleSelectionChange(1);
                 break;
             case SDLK_LEFT:
-                gameModel.handleSelectionChange(2);
+                gameModel->handleSelectionChange(2);
                 break;
             case SDLK_RIGHT:
-                gameModel.handleSelectionChange(3);
+                gameModel->handleSelectionChange(3);
                 break;
             case SDLK_g:
-                gameModel.proceed();
+                gameModel->proceed();
                 break;
             case SDLK_SPACE:
-                gameModel.handleSelect();
+                gameModel->handleSelect();
                 break;
             case SDLK_ESCAPE:
-                gameModel.endAttackMode();
+                gameModel->endAttackMode();
                 break;
             default:
                 break;
@@ -194,12 +206,12 @@ void Game::gameLoopUpdate()
     SDL_Color black = {0, 0, 0};
     SDL_Color white = {255, 255, 255};
 
-    for (int i = 0; i < gameModel.board.size(); ++i)
+    for (int i = 0; i < gameModel->board.size(); ++i)
     {
-        if (gameModel.board[i].isSelectable)
+        if (gameModel->board[i].isSelectable)
         {
             SDL_Color color;
-            switch (gameModel.board[i].owner) {
+            switch (gameModel->board[i].owner) {
                 case 0:
                     // red (player 1)
                     color = {255, 0, 0};
@@ -227,24 +239,24 @@ void Game::gameLoopUpdate()
             SDL_Rect hexSprite;
             SDL_Rect armyCountRect;
 
-            hexSprite.x = gameModel.board[i].x;
-            hexSprite.y = gameModel.board[i].y;
+            hexSprite.x = gameModel->board[i].x;
+            hexSprite.y = gameModel->board[i].y;
 
             armyCountRect.x = hexSprite.x + 45;
             armyCountRect.y = hexSprite.y + 40;
-            int count = gameModel.board[i].numberOfArmies;
+            int count = gameModel->board[i].numberOfArmies;
             std::string count_string = std::to_string(count);
 
             SDL_Surface* armyCountSurface = TTF_RenderText_Shaded(mainFont, count_string.c_str(), black, color);
-            if (gameModel.board[i].isAttackTarget)
+            if (gameModel->board[i].isAttackTarget)
             {
                 SDL_BlitSurface(attackTargetSurface, NULL, screenSurface, &hexSprite);
             }
-            else if (gameModel.board[i].isSelected)
+            else if (gameModel->board[i].isSelected)
             {
                 SDL_BlitSurface(selectedHexSurface, NULL, screenSurface, &hexSprite);
             }
-            else if (gameModel.board[i].isAdjacent && !gameModel.isInReinforcementStage)
+            else if (gameModel->board[i].isAdjacent && !gameModel->isInReinforcementStage)
             {
                 SDL_BlitSurface(unselectedAdjacentHexSurface, NULL, screenSurface, &hexSprite);
             }
@@ -261,7 +273,7 @@ void Game::gameLoopUpdate()
     SDL_Rect currentPlayerTurnRect;
     currentPlayerTurnRect.x = 10;
     currentPlayerTurnRect.y = 30;
-    std::string currentPlayerTurnString = "Current Turn: Player " + std::to_string((gameModel.currentTurn % gameModel.numPlayers) + 1);
+    std::string currentPlayerTurnString = "Current Turn: Player " + std::to_string((gameModel->currentTurn % gameModel->numPlayers) + 1);
     SDL_Surface *currentPlayerTurnSurface = TTF_RenderText_Solid(mainFont, currentPlayerTurnString.c_str(), black);
     SDL_BlitSurface(currentPlayerTurnSurface, NULL, screenSurface, &currentPlayerTurnRect);
     SDL_FreeSurface(currentPlayerTurnSurface);
@@ -270,7 +282,7 @@ void Game::gameLoopUpdate()
     currentStageRect.x = 10;
     currentStageRect.y = 50;
     std::string currentStageString = "Current Stage: ";
-    currentStageString += gameModel.isInReinforcementStage ? "Reinforcement" : "Attack";
+    currentStageString += gameModel->isInReinforcementStage ? "Reinforcement" : "Attack";
     SDL_Surface *currentStageSurface = TTF_RenderText_Solid(mainFont, currentStageString.c_str(), black);
     SDL_BlitSurface(currentStageSurface, NULL, screenSurface, &currentStageRect);
     SDL_FreeSurface(currentStageSurface);
@@ -278,7 +290,7 @@ void Game::gameLoopUpdate()
     SDL_Rect reinforcementsLeftRect;
     reinforcementsLeftRect.x = 10;
     reinforcementsLeftRect.y = 70;
-    std::string reinforcementsLeftString = "Reinforcements Left: " + std::to_string(gameModel.reinforcementsLeft);
+    std::string reinforcementsLeftString = "Reinforcements Left: " + std::to_string(gameModel->reinforcementsLeft);
     SDL_Surface *reinforcementsLeftSurface = TTF_RenderText_Solid(mainFont, reinforcementsLeftString.c_str(), black);
     SDL_BlitSurface(reinforcementsLeftSurface, NULL, screenSurface, &reinforcementsLeftRect);
     SDL_FreeSurface(reinforcementsLeftSurface);
@@ -303,4 +315,5 @@ Game::~Game()
     SDL_FreeSurface(unselectedAdjacentHexSurface);
     SDL_FreeSurface(selectedHexSurface);
     SDL_FreeSurface(attackTargetSurface);
+    delete gameModel;
 }

@@ -1,3 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include "GameModel.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -6,14 +9,11 @@
 
 class Game
 {
-    GameModel gameModel;
+    GameModel *gameModel;
     SDL_Window *window;
 
     bool map_selected = false;
 
-    void menuScreenLoop();
-    void playLoop(bool *outerQuit);
-    void gameOverLoop(bool *outerQuit);
     void gameLoopUpdate();
 
     void mainLoop();
@@ -33,6 +33,8 @@ class Game
 
     int currentScreen;
 
+    bool firstTime = true;
+
     std::string backgroundImagePath;
 
     SDL_Surface *unselectedUnadjacentHexSurface;
@@ -45,3 +47,5 @@ public:
     ~Game();
     void start();
 };
+
+#endif
