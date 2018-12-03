@@ -9,6 +9,10 @@ Game::Game()
 {
     screenWidth = 750;
     screenHeight = 700;
+}
+
+void Game::start()
+{
     if (TTF_Init() == -1)
     {
         printf("TTF_Init: %s\n", TTF_GetError());
@@ -19,10 +23,6 @@ Game::Game()
     unselectedAdjacentHexSurface = loadSurface("bmps/hexAdjacentUnselected.bmp");
     selectedHexSurface = loadSurface("bmps/hexSelected.bmp");
     attackTargetSurface = loadSurface("bmps/hexAttackTarget.bmp");
-}
-
-void Game::start()
-{
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow("GameWindow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, 0);
     SDL_SetWindowTitle(window, "RUSK");

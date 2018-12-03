@@ -24,8 +24,6 @@ class Game
 
     void handleMouseInput(SDL_Event input);
 
-    SDL_Surface* loadSurface(std::string);
-
     TTF_Font *mainFont;
 
     int screenWidth;
@@ -46,6 +44,7 @@ public:
     Game();
     ~Game();
     void start();
+    SDL_Surface* loadSurface(std::string);
 };
 
 #endif
