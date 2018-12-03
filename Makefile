@@ -20,7 +20,7 @@ all: main test
 main: main.o Hex.o GameModel.o PangaeaGameModel.o RiverGameModel.o RingGameModel.o Game.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
-test: Hex.test Game.test GameModel.test PangaeaGameModel.test RiverGameModel.test RingGameModel.test Hex.cxxtest.test Game.cxxtest.test PangaeaGameModel.cxxtest.test RiverGameModel.cxxtest.test RingGameModel.cxxtest.test runner.test
+test: Hex.test GameModel.test PangaeaGameModel.test RiverGameModel.test RingGameModel.test Hex.cxxtest.test PangaeaGameModel.cxxtest.test RiverGameModel.cxxtest.test RingGameModel.cxxtest.test runner.test
 	g++ $(TESTLINKERFLAGS) $(addprefix $(BINDIR)/, $^) -I$(CXXTEST_INCLUDE) -o $@
 
 main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
@@ -85,15 +85,6 @@ RingGameModel.cxxtest.cpp: $(TESTDIR)/RingGameModel.cxxtest.h $(SRCDIR)/RingGame
 
 Game.o: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
 	g++ $(CPPFLAGS) -o $(BINDIR)/$@ $<
-
-Game.test: $(SRCDIR)/Game.cpp $(INCDIR)/Game.h $(INCDIR)/GameModel.h
-	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
-
-Game.cxxtest.test: Game.cxxtest.cpp
-	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/Game.cxxtest.cpp -o $(BINDIR)/$@
-
-Game.cxxtest.cpp: $(TESTDIR)/Game.cxxtest.h $(SRCDIR)/Game.cpp $(INCDIR)/Game.h
-	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
 
 runner.cpp:
 	$(CXXTEST_GEN) --root --error-printer -o $@
