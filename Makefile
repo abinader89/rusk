@@ -9,7 +9,7 @@ CPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR)
 LINKERFLAGS=-lSDL2 -lSDL2_ttf -lSDL2_image
 
 TESTCPPFLAGS=-c -std=c++11 -Wall -I$(INCDIR) -I$(SDLDIR) -fprofile-arcs -ftest-coverage
-TESTLINKERFLAGS=-fprofile-arcs -lSDL2
+TESTLINKERFLAGS=-fprofile-arcs -lSDL2 -lSDL2_ttf -lSDL2_image
 
 CXXTEST_HOME ?= cxxtest-4.4
 CXXTEST_GEN = $(CXXTEST_HOME)/bin/cxxtestgen
@@ -20,7 +20,7 @@ all: main test
 main: main.o Hex.o GameModel.o PangaeaGameModel.o RiverGameModel.o Game.o
 	g++ -std=c++11 -Wall $(LINKERFLAGS) -o $@ $(addprefix $(BINDIR)/, $^)
 
-test: GameModel.test Hex.test GameModel.cxxtest.test PangaeaGameModel.cxxtest.test RiverGameModel.cxxtest.test runner.test
+test: GameModel.test Hex.test PangaeaGameModel.test RiverGameModel.test GameModel.cxxtest.test PangaeaGameModel.cxxtest.test RiverGameModel.cxxtest.test runner.test
 	g++ $(TESTLINKERFLAGS) $(addprefix $(BINDIR)/, $^) -I$(CXXTEST_INCLUDE) -o $@
 
 main.o: $(SRCDIR)/main.cpp $(INCDIR)/Game.h
@@ -38,7 +38,7 @@ Hex.test: $(SRCDIR)/Hex.cpp $(INCDIR)/Hex.h
 GameModel.o: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h
 	g++ $(CPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
-GameModel.test: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h
+GameModel.test: $(SRCDIR)/GameModel.cpp $(INCDIR)/GameModel.h $(INCDIR)/Hex.h 
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
 GameModel.cxxtest.test: GameModel.cxxtest.cpp
@@ -66,7 +66,7 @@ RiverGameModel.test: $(SRCDIR)/RiverGameModel.cpp $(INCDIR)/RiverGameModel.h $(I
 	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) -o $(BINDIR)/$@ $<
 
 RiverGameModel.cxxtest.test: RiverGameModel.cxxtest.cpp
-	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/GameModel.cxxtest.cpp -o $(BINDIR)/$@
+	g++ $(TESTCPPFLAGS) -I$(CXXTEST_INCLUDE) $(BINDIR)/RiverGameModel.cxxtest.cpp -o $(BINDIR)/$@
 
 RiverGameModel.cxxtest.cpp: $(TESTDIR)/RiverGameModel.cxxtest.h $(SRCDIR)/RiverGameModel.cpp $(INCDIR)/RiverGameModel.h
 	$(CXXTEST_GEN) --part --error-printer $< -o $(BINDIR)/$@
