@@ -42,9 +42,13 @@ void Game::mainLoop()
                 quit = true;
                 break;
             }
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                handleMouseInput(event);
+            }
             if (event.type == SDL_KEYDOWN)
-    		{
-                handleInput(event.key.keysym.sym);
+            {
+                handleInput(event);
             }
             update();
             SDL_UpdateWindowSurface(window);
@@ -93,13 +97,24 @@ void Game::update()
     }
 }
 
-void Game::handleInput(SDL_Keycode input)
+void Game::handleMouseInput(SDL_Event e)
 {
-    if (currentScreen == 0)
+    if (map_selected)
     {
-        switch (input)
-        {
-            case SDLK_1:
+        return;
+    }
+    Uint32 mouse_input = e.button.button;
+    int mouseX = e.motion.x;
+    int mouseY = e.motion.y;
+    switch (mouse_input)
+    {
+        case SDL_BUTTON_LEFT:
+            if (mouseX > 500
+                && mouseX < 700
+                && mouseY > 585
+                && mouseY < 685)
+            {
+
                 backgroundImagePath = "bmps/gameScreenBackgroundPangaea.bmp";
                 if (!firstTime)
                 {
@@ -108,8 +123,13 @@ void Game::handleInput(SDL_Keycode input)
                 firstTime = false;
                 gameModel = new PangaeaGameModel();
                 currentScreen = 1;
-                break;
-            case SDLK_2:
+            }
+            else if (mouseX > 50
+            && mouseX < 250
+            && mouseY > 585
+            && mouseY < 685)
+            {
+
                 backgroundImagePath = "bmps/gameScreenBackgroundBridge.bmp";
                 if (!firstTime)
                 {
@@ -118,14 +138,26 @@ void Game::handleInput(SDL_Keycode input)
                 firstTime = false;
                 gameModel = new RiverGameModel();
                 currentScreen = 1;
-                break;
-            default:
-                break;
-        }
+            }
+            else if (mouseX > 275
+                && mouseX < 480
+                && mouseY > 585
+                && mouseY < 685)
+            {
+                SDL_ShowSimpleMessageBox(0, "Coming Soon", "Map not yet implemented.", window);
+            }
+            break;
+        default:
+            break;
     }
+}
+
+void Game::handleInput(SDL_Event e)
+{
+    size_t key_input = e.key.keysym.sym;
     if (currentScreen == 1)
     {
-        switch (input)
+        switch (key_input)
         {
             case SDLK_UP:
                 gameModel->handleSelectionChange(0);
@@ -154,7 +186,7 @@ void Game::handleInput(SDL_Keycode input)
     }
     if (currentScreen == 2)
     {
-        switch (input)
+        switch (key_input)
         {
             case SDLK_ESCAPE:
                 currentScreen = 0;
