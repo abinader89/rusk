@@ -1,0 +1,18 @@
+Most people seemed to enjoy our game a lot. We played a couple games of each
+type (2 player, 3 player, and 4 player), so it was nice to see that everyone
+seemed to like all of the game types. We received really positive feedback
+on the art on the menu screen.
+
+Although we have a writeup of the controls, some users need additional
+explaining for how the turn phases progress. This was mostly a limitation due
+to using the arrow keys, since mouse control was a stretch goal that we didn't
+get to.
+
+We found one bug where if users progressed to the next turn while still in
+attack mode, it made the next user unable to attack. This manifested as some
+tiles that should have been attackable showing as unattackable.
+We have since fixed this bug.
+
+We were surprised by how little people seemed to be offended by the UI. We
+were worried that it was a bit too primitive, but people seemed interested
+enough in the gameplay that it didn't matter.
