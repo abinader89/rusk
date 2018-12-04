@@ -13,6 +13,8 @@ class TestSprite : public CxxTest::TestSuite
 
         TS_ASSERT_EQUALS(test_surface->h, 35);
         TS_ASSERT_EQUALS(test_surface->w, 48);
+
+        SDL_FreeSurface(test_surface);
     }
 
 };
