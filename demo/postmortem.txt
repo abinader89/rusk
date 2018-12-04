@@ -1,0 +1,21 @@
+Rights:
+
+    We communicated a lot on slack, which definitely helped with splitting up
+    work and making sure that no work was duplicated. We also instituted a
+    required review process on github, which ensured that everyone had a
+    pretty good understanding of the codebase, as well as enforcing that all
+    merged code had unit tests.
+
+    We were very collaborative and iterative in the game design process. As
+    we play-tested, we all kept an open mind to new ideas, and freely made
+    changes to the structure of the game to optimize the experience.
+
+Wrongs:
+
+    We didn't do a great job of predicting what would be achievable. We often
+    fell short of our check-in goals due to some features taking much longer to
+    implement than expected.
+
+    We mostly communicated over slack as opposed to in person, which sometimes
+    led to miscommunications due to the limitations of the medium. If we could
+    do it again, we would try to meet in person more often.
