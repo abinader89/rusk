@@ -8,15 +8,13 @@ class TestSprite : public CxxTest::TestSuite
 {
     public:
     void testLoadSprite() {
-        Sprite test_sprite = Sprite("sprites/OneSoldier.png");
-        SDL_Surface* test_surface = test_sprite.loadSprite();
+        SDL_Surface *testSurface = Sprite::loadSpriteForPath("sprites/OneSoldier.png");
 
-        TS_ASSERT_EQUALS(test_surface->h, 35);
-        TS_ASSERT_EQUALS(test_surface->w, 48);
+        TS_ASSERT_EQUALS(testSurface->h, 35);
+        TS_ASSERT_EQUALS(testSurface->w, 48);
 
-        SDL_FreeSurface(test_surface);
+        SDL_FreeSurface(testSurface);
     }
-
 };
 
 #endif

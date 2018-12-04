@@ -2,6 +2,7 @@
 #include "PangaeaGameModel.h"
 #include "RiverGameModel.h"
 #include "RingGameModel.h"
+#include "Sprite.h"
 #include <string>
 #include <iostream>
 
@@ -19,10 +20,10 @@ void Game::start()
         exit(1);
     }
     mainFont = TTF_OpenFont("fonts/font.otf", 16);
-    unselectedUnadjacentHexSurface = loadSurface("bmps/hexUnadjacentUnselected.bmp");
-    unselectedAdjacentHexSurface = loadSurface("bmps/hexAdjacentUnselected.bmp");
-    selectedHexSurface = loadSurface("bmps/hexSelected.bmp");
-    attackTargetSurface = loadSurface("bmps/hexAttackTarget.bmp");
+    unselectedUnadjacentHexSurface = Sprite::loadSpriteForPath("bmps/hexUnadjacentUnselected.bmp");
+    unselectedAdjacentHexSurface = Sprite::loadSpriteForPath("bmps/hexAdjacentUnselected.bmp");
+    selectedHexSurface = Sprite::loadSpriteForPath("bmps/hexSelected.bmp");
+    attackTargetSurface = Sprite::loadSpriteForPath("bmps/hexAttackTarget.bmp");
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow("GameWindow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, 0);
     SDL_SetWindowTitle(window, "RUSK");

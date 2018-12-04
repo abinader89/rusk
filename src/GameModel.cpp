@@ -282,6 +282,7 @@ void GameModel::proceed()
     }
     else
     {
+        endAttackMode();
         isInReinforcementStage = true;
         reinforcementsLeft = 0;
         while (reinforcementsLeft == 0)

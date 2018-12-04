@@ -6,12 +6,10 @@
 
 class Sprite
 {
-    std::string path;
-
-
     public:
-        Sprite(std::string path);
-        SDL_Surface* loadSprite();
+        static SDL_Surface* loadSpriteForPath(std::string path);
+    private:
+        Sprite();
 };
 
 #endif // SPRITE_H
